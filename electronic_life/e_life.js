@@ -81,11 +81,11 @@ function World(map, legend){
       this.grid = grid;
       this.legend = legend;
 
-      map.forEach(function(line, y)){
+      map.forEach(function(line, y){
             for(var x=0; x<line.length; x++){
                   grid.set(new Vector(x, y), elementFromChar(legend, line[x]));
             }
-      }
+      });
 }
 
 function charFromElement(element){
@@ -96,13 +96,13 @@ function charFromElement(element){
 }
 
 World.prototype.toString = function(){
-      var ouput = "";
+      var output = "";
       for (var y=0; y<this.grid.height; y++){
             for (var x=0; x<this.grid.width; x++){
                   var element = this.grid.get(new Vector(x, y));
                   output += charFromElement(element);
             }
-            output += "/n";
+            output += "\n";
       }
       return output;
 }
@@ -110,5 +110,3 @@ World.prototype.toString = function(){
 function Wall() {}
 
 var world = new World(plan, {"#": Wall, "o": AimlessCritter});
-
-console.log(world.toString());
