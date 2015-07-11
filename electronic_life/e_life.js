@@ -27,16 +27,36 @@ function Grid(width, height){
 Grid.prototype.isInside = function(vector){
 	return vector.x >= 0 && vector.x < this.width &&
 		   vector.y >= 0 && vector.y < this.height;
-}
+};
 
 Grid.prototype.get = function(vector){
 	return this.space[vector.x + vector.y * this.width];
-}
+};
 Grid.prototype.set = function(vector, value){
 	this.space[vector.y * this.width + vector.x] = value;
+};
+
+var directions = {
+	"n": new Vector(0, -1),
+	"ne": new Vector(1, -1),
+	"e": new Vector(1, 0),
+	"se": new Vector(1, 1),
+	"s": new Vector(0, 1),
+	"sw": new Vector(-1, 1),
+	"w": new Vector(-1, 0),
+	"nw": new Vector(-1, -1)
+};
+var direction_names = "n ne e se s sw w nw".split(" ");
+function randomElement(array) {
+	return array[Math.floor(Math.random() * array.length)];
+}
+function AimlessCritter(){
+	this.direction = randomElement(direction_names);
+}
+AimlessCritter.prototype.act = function(view){
+	if(view.look(this.direction) != " ")
+		this.direction = view.find(" ") || "s";
+	return {type: "move", direction: this.direction};
 }
 
-var grid = new Grid(5,5);
-console.log(grid.get(new Vector(1,1)));
-grid.set(new Vector(1,1), "X");
-console.log(grid.get(new Vector(1,1)));
+
