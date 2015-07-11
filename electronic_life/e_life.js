@@ -1,4 +1,4 @@
-//Electronic Life
+//Electronic Life Project from Eloquent Javascript
 
 var plan = ["############################",
             "#      #    #      o      ##",
@@ -13,6 +13,7 @@ var plan = ["############################",
             "#    #                     #",
             "############################"];
 
+//Grid and vector definitions
 function Vector(x, y) {
 	this.x = x;
 	this.y = y;
@@ -32,10 +33,12 @@ Grid.prototype.isInside = function(vector){
 Grid.prototype.get = function(vector){
 	return this.space[vector.x + vector.y * this.width];
 };
+
 Grid.prototype.set = function(vector, value){
 	this.space[vector.y * this.width + vector.x] = value;
 };
 
+//directions defintions and functions
 var directions = {
 	"n": new Vector(0, -1),
 	"ne": new Vector(1, -1),
@@ -46,19 +49,25 @@ var directions = {
 	"w": new Vector(-1, 0),
 	"nw": new Vector(-1, -1)
 };
+
 var direction_names = "n ne e se s sw w nw".split(" ");
+
 function randomElement(array) {
 	return array[Math.floor(Math.random() * array.length)];
 }
+
+//critter definition
 function AimlessCritter(){
 	this.direction = randomElement(direction_names);
 }
+
 AimlessCritter.prototype.act = function(view){
 	if(view.look(this.direction) != " ")
 		this.direction = view.find(" ") || "s";
 	return {type: "move", direction: this.direction};
 }
 
+//definitions of the world space
 function elementFromChar(legend, ch) {
       if (ch == " ")
             return null;
@@ -66,6 +75,7 @@ function elementFromChar(legend, ch) {
       element.originChar = ch;
       return element;
 }
+
 function World(map, legend){
       var grid = new Grid(map[0].length, map.length);
       this.grid = grid;
@@ -78,3 +88,27 @@ function World(map, legend){
       }
 }
 
+function charFromElement(element){
+      if (element == null)
+            return " ";
+      else 
+            return element.originChar;
+}
+
+World.prototype.toString = function(){
+      var ouput = "";
+      for (var y=0; y<this.grid.height; y++){
+            for (var x=0; x<this.grid.width; x++){
+                  var element = this.grid.get(new Vector(x, y));
+                  output += charFromElement(element);
+            }
+            output += "/n";
+      }
+      return output;
+}
+
+function Wall() {}
+
+var world = new World(plan, {"#": Wall, "o": AimlessCritter});
+
+console.log(world.toString());
