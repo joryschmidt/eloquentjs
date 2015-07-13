@@ -19,6 +19,10 @@ function Vector(x, y) {
 	this.y = y;
 }
 
+Vector.prototype.plus = function(vec){
+      return new Vector(this.x + vec.x, this.y + vec.y);
+};
+
 function Grid(width, height){
 	this.space = new Array(width * height);
 	this.width = width;
@@ -67,7 +71,7 @@ AimlessCritter.prototype.act = function(view){
 	return {type: "move", direction: this.direction};
 }
 
-//definitions of the world space
+//definitions of the world space and legend
 function elementFromChar(legend, ch) {
       if (ch == " ")
             return null;
@@ -126,7 +130,7 @@ Grid.prototype.forEach = function(f, context) {
 World.prototype.turn = function() {
       var acted = [];
       this.grid.forEach(function(critter, vector){
-            if (critter.act && critter.acted.indexOf(critter) == -1){
+            if (critter.act && acted.indexOf(critter) == -1){
                   acted.push(critter);
                   this.letAct(critter, vector);
             }
@@ -181,3 +185,8 @@ View.prototype.find = function(ch){
             return null;
       return randomElement(found);
 };
+
+for (var i=0; i<5; i++){
+      world.turn();
+      console.log(world.toString());
+}
