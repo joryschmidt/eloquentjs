@@ -192,9 +192,11 @@ function dirPlus(dir, n){
 }
 
 function WallFlower(){
-      this.dir = 's';
+      this.dir = 'n';
 }
 
+// WallFlower checks back left corner of direction, and if that space
+// is a wall or other creature, WF swings clockwise from there until it finds an empty space to move into.
 WallFlower.prototype.act = function(view){
       var start = this.dir;
       if(view.look(dirPlus(this.dir, -3)) != " ")
@@ -203,5 +205,5 @@ WallFlower.prototype.act = function(view){
             this.dir = dirPlus(this.dir, 1);
             if(this.dir == start) break;
       }
-      return {type: move, direction: this.direction};
+      return {type: "move", direction: this.dir};
 };
