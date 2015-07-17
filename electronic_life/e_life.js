@@ -186,6 +186,46 @@ View.prototype.find = function(ch){
       return randomElement(found);
 };
 
+var far_places = {
+      "n" = new Vector(0, -2);
+      "ne" = new Vector(2, -2);
+      "e" = new Vector(2, 0);
+      "se" = new Vector(2, 2);
+      "s" = new Vector(0, 2);
+      "sw" = new Vector(-2, 2);
+      "w" = new Vector(-2, 0);
+      "nw" = new Vector(-2, -2);
+};
+
+View.prototype.lookFar = function(){
+      var target = this.vector.plus(far_places[dir]);
+      if(this.world.grid.isInside(target))
+            return charFromElement(this.world.grid.get(target));
+      else
+            return '#';
+}
+
+View.prototype.findAllFar = function(ch) {
+      var found = [];
+      for (var dir in far_places){
+            if (this.look(dir) == ch)
+                  found.push(dir);
+      }
+      return found;
+};
+
+View.prototype.findFar = function(ch){
+      var found = this.findAllFar(ch);
+      if (found.length == 0) 
+            return null;
+      return randomElement(found);
+};
+
+View.prototype.moveable = function(dir){
+      if (view.look(dir) == " ")
+            return true;
+};
+
 function dirPlus(dir, n){
       var index = direction_names.indexOf(dir);
       return direction_names[(index + n + 8) % 8];
@@ -230,7 +270,7 @@ LifelikeWorld.prototype.letAct = function(critter, vector){
 };
 
 actionTypes.grow = function(critter){
-      critter.energy += 0.5;
+      critter.energy += 0.3;
       return true;
 };
 
@@ -266,7 +306,7 @@ actionTypes.reproduce = function(critter, vector, action){
 };
 
 function Plant(){
-      this.energy = 3 + Math.random() * 4;
+      this.energy = 1 + Math.random() * 4;
 }
 
 Plant.prototype.act = function(context){
@@ -307,12 +347,41 @@ SmartPlantEater.prototype.act = function(view){
             this.direction = space || "n";
       var met_someone = view.find("O");
       var plant = view.find("*");
+      var go = randomElement([true, false]);
       if (this.energy >= 65 && space && met_someone)
             return {type: "reproduce", direction: space};
       if(plant && this.energy < 60)
             return {type: "eat", direction: plant}
       if(this.energy < 20)
             return {type: "move", direction: this.direction}
-      if(space)
+      if(space && go)
+            return {type: "move", direction: space}
+};
+
+//Let's add a predator. He can see farther than the herbivores
+
+function Predator(){
+      this.energy = 50;
+      this.direction = randomElement(direction_names);
+}
+
+Predator.prototype.act = function(view){
+      var space = view.find(" ");
+      if (view.look(this.direction) != " ")
+            this.direction = space || "n";
+      var met_someone = view.find("@");
+      var see_partner = view.findFar("@");
+      var food = view.find("O");
+      var see_food = view.findFar("O");
+      var go = randomElement([true, false]);
+      if (this.energy >= 140 && space && met_someone)
+            return {type: "reproduce", direction: space}
+      if (this.energy >= 141 && see_partner && view.moveable(see_partner))
+            return {type: "move", direction: see_partner)};
+      if (this.energy < 100 && food)
+            return {type: "eat", direction: food};
+      if (this.energy < 105 && see_food && view.moveable(see_food))
+            return {type: "move", direction: see_food}
+      if(space && go)
             return {type: "move", direction: space}
 };
