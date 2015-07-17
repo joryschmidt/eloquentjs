@@ -291,5 +291,5 @@ PlantEater.prototype.act = function(context){
       if (plant)
             return {type: "eat", direction: plant};
       if (space)
-            return {type: "move", direciotn: space)};
+            return {type: "move", direction: space};
 };
