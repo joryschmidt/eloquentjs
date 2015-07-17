@@ -275,7 +275,7 @@ Plant.prototype.act = function(context){
             if(space)
                   return {type: "reproduce", direction: space};
       }
-      if(this.energy < 20)
+      if(this.energy < 16)
             return {type: 'grow'};
 }
 
@@ -297,7 +297,7 @@ PlantEater.prototype.act = function(context){
 //Let's make a smarter, non-asexual plant eater
 
 function SmartPlantEater(){
-      this.energy = 20;
+      this.energy = 30;
       this.direction = randomElement(direction_names);
 }
 
