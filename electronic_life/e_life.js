@@ -270,7 +270,7 @@ LifelikeWorld.prototype.letAct = function(critter, vector){
 };
 
 actionTypes.grow = function(critter){
-      critter.energy += 0.3;
+      critter.energy += 0.5;
       return true;
 };
 
@@ -306,7 +306,7 @@ actionTypes.reproduce = function(critter, vector, action){
 };
 
 function Plant(){
-      this.energy = 1 + Math.random() * 4;
+      this.energy = 3 + Math.random() * 4;
 }
 
 Plant.prototype.act = function(context){
@@ -315,7 +315,7 @@ Plant.prototype.act = function(context){
             if(space)
                   return {type: "reproduce", direction: space};
       }
-      if(this.energy < 16)
+      if(this.energy < 20)
             return {type: 'grow'};
 }
 
@@ -337,7 +337,7 @@ PlantEater.prototype.act = function(context){
 //Let's make a smarter, non-asexual plant eater
 
 function SmartPlantEater(){
-      this.energy = 30;
+      this.energy = 25;
       this.direction = randomElement(direction_names);
 }
 
@@ -348,11 +348,11 @@ SmartPlantEater.prototype.act = function(view){
       var met_someone = view.find("O");
       var plant = view.find("*");
       var go = randomElement([true, false]);
-      if (this.energy >= 65 && space && met_someone)
+      if (this.energy >= 60 && space && met_someone)
             return {type: "reproduce", direction: space};
-      if(plant && this.energy < 60)
+      if(plant && this.energy < 80)
             return {type: "eat", direction: plant}
-      if(this.energy < 20)
+      if(this.energy < 30)
             return {type: "move", direction: this.direction}
       if(space && go)
             return {type: "move", direction: space}
@@ -374,14 +374,16 @@ Predator.prototype.act = function(view){
       var food = view.find("O");
       var see_food = view.findFar("O");
       var go = randomElement([true, false]);
-      if (this.energy >= 140 && space && met_someone)
+      if (this.energy >= 150 && space && met_someone)
             return {type: "reproduce", direction: space}
-      if (this.energy >= 141 && see_partner && view.moveable(see_partner))
+      if (this.energy >= 151 && see_partner && view.moveable(see_partner))
             return {type: "move", direction: see_partner};
-      if (this.energy < 100 && food)
+      if (this.energy < 350 && food)
             return {type: "eat", direction: food};
-      if (this.energy < 105 && see_food && view.moveable(see_food))
+      if (this.energy < 250 && see_food && view.moveable(see_food))
             return {type: "move", direction: see_food}
+      if (this.energy < 150)
+            return {type: "move", direction: this.direction}
       if(space && go)
             return {type: "move", direction: space}
 };
