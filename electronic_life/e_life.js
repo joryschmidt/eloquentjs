@@ -257,7 +257,7 @@ actionTypes.eat = function(critter, vector, action){
 actionTypes.reproduce = function(critter, vector, action){
       var baby = elementFromChar(this.legend, critter.originChar);
       var dest = this.checkDestination(action, vector);
-      if (dest == null || critter.energy <= 2*baby.energy ||
+      if (dest == null || critter.energy <= 2 * baby.energy ||
             this.grid.get(dest) != null)
             return false;
       critter.energy -= 2 * baby.energy;
@@ -266,7 +266,7 @@ actionTypes.reproduce = function(critter, vector, action){
 };
 
 function Plant(){
-      this.energy = 3 * Math.random() * 4;
+      this.energy = 3 + Math.random() * 4;
 }
 
 Plant.prototype.act = function(context){
@@ -276,7 +276,7 @@ Plant.prototype.act = function(context){
                   return {type: "reproduce", direction: space};
       }
       if(this.energy < 20)
-            return {type: grow};
+            return {type: 'grow'};
 }
 
 function PlantEater(){
@@ -292,4 +292,27 @@ PlantEater.prototype.act = function(context){
             return {type: "eat", direction: plant};
       if (space)
             return {type: "move", direction: space};
+};
+
+//Let's make a smarter, non-asexual plant eater
+
+function SmartPlantEater(){
+      this.energy = 20;
+      this.direction = randomElement(direction_names);
+}
+
+SmartPlantEater.prototype.act = function(view){
+      var space = view.find(" ");
+      if (view.look(this.direction) != " ")
+            this.direction = space || "n";
+      var met_someone = view.find("O");
+      var plant = view.find("*");
+      if (this.energy >= 65 && space && met_someone)
+            return {type: "reproduce", direction: space};
+      if(plant && this.energy < 60)
+            return {type: "eat", direction: plant}
+      if(this.energy < 20)
+            return {type: "move", direction: this.direction}
+      if(space)
+            return {type: "move", direction: space}
 };
