@@ -187,14 +187,14 @@ View.prototype.find = function(ch){
 };
 
 var far_places = {
-      "n" = new Vector(0, -2);
-      "ne" = new Vector(2, -2);
-      "e" = new Vector(2, 0);
-      "se" = new Vector(2, 2);
-      "s" = new Vector(0, 2);
-      "sw" = new Vector(-2, 2);
-      "w" = new Vector(-2, 0);
-      "nw" = new Vector(-2, -2);
+      "n": new Vector(0, -2),
+      "ne": new Vector(2, -2),
+      "e": new Vector(2, 0),
+      "se": new Vector(2, 2),
+      "s": new Vector(0, 2),
+      "sw": new Vector(-2, 2),
+      "w": new Vector(-2, 0),
+      "nw": new Vector(-2, -2)
 };
 
 View.prototype.lookFar = function(){
@@ -377,7 +377,7 @@ Predator.prototype.act = function(view){
       if (this.energy >= 140 && space && met_someone)
             return {type: "reproduce", direction: space}
       if (this.energy >= 141 && see_partner && view.moveable(see_partner))
-            return {type: "move", direction: see_partner)};
+            return {type: "move", direction: see_partner};
       if (this.energy < 100 && food)
             return {type: "eat", direction: food};
       if (this.energy < 105 && see_food && view.moveable(see_food))
