@@ -260,5 +260,36 @@ actionTypes.reproduce = function(critter, vector, action){
       if (dest == null || critter.energy <= 2*baby.energy ||
             this.grid.get(dest) != null)
             return false;
-      
+      critter.energy -= 2 * baby.energy;
+      this.grid.set(dest, baby);
+      return true;
+};
+
+function Plant(){
+      this.energy = 3 * Math.random() * 4;
 }
+
+Plant.prototype.act = function(context){
+      if(this.energy > 15){
+            var space = context.find(" ");
+            if(space)
+                  return {type: "reproduce", direction: space};
+      }
+      if(this.energy < 20)
+            return {type: grow};
+}
+
+function PlantEater(){
+      this.energy = 20;
+}
+
+PlantEater.prototype.act = function(context){
+      var space = context.find(" ");
+      if (this.energy > 60 && space)
+            return {type: "reproduce", direction: space};
+      var plant = context.find("*");
+      if (plant)
+            return {type: "eat", direction: plant};
+      if (space)
+            return {type: "move", direciotn: space)};
+};
