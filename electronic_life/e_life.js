@@ -387,3 +387,5 @@ Predator.prototype.act = function(view){
       if(space && go)
             return {type: "move", direction: space}
 };
+
+//Git testing
