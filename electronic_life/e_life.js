@@ -123,6 +123,8 @@ Grid.prototype.forEach = function(f, context) {
                   var value = this.space[x + y * this.width];
                   if (value != null)
                         f.call(context, value, new Vector(x, y));
+                  else if (Math.random() < 0.00001)
+                        this.set(new Vector(x, y), elementFromChar(context.legend, '*');
             }
       }
 };
@@ -260,8 +262,13 @@ var actionTypes = Object.create(null);
 
 LifelikeWorld.prototype.letAct = function(critter, vector){
       var action = critter.act(new View(this, vector));
+      var legend_array = new Array();
+      for(symbol in this.legend){
+            legend_array.push(symbol);
+      }
+      var evolved_critter = legend_array[legend_array.indexOf(critter.originChar) - 1];
       var handled = action && action.type in actionTypes 
-            && actionTypes[action.type].call(this, critter, vector, action);
+            && actionTypes[action.type].call(this, critter, vector, action, evolved_critter);
       if(!handled){
             critter.energy -= 0.2;
             if(critter.energy <= 0)
@@ -305,11 +312,19 @@ actionTypes.reproduce = function(critter, vector, action){
       return true;
 };
 
+actionTypes.evolve = function(critter, vector, action, evolved_critter){
+      var new_critter = elementFromChar(this.legend, evolved_critter);
+      this.grid.set(vector, new_critter);
+      return true;
+}
+
 function Plant(){
       this.energy = 3 + Math.random() * 4;
 }
 
 Plant.prototype.act = function(context){
+      if(Math.random() < 0.0005)
+            return {type: 'evolve'};
       if(this.energy > 15){
             var space = context.find(" ");
             if(space)
@@ -348,6 +363,8 @@ SmartPlantEater.prototype.act = function(view){
       var met_someone = view.find("O");
       var plant = view.find("*");
       var go = randomElement([true, false]);
+      if (Math.random() < 0.001)
+            return {type: 'evolve'};
       if (this.energy >= 60 && space && met_someone)
             return {type: "reproduce", direction: space};
       if(plant && this.energy < 80)
