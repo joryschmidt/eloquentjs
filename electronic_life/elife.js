@@ -95,7 +95,7 @@ function World(map, legend){
 function charFromElement(element){
       if (element == null)
             return " ";
-      else 
+      else
             return element.originChar;
 }
 
@@ -181,7 +181,7 @@ View.prototype.findAll = function(ch) {
 
 View.prototype.find = function(ch){
       var found = this.findAll(ch);
-      if (found.length == 0) 
+      if (found.length == 0)
             return null;
       return randomElement(found);
 };
@@ -216,7 +216,7 @@ View.prototype.findAllFar = function(ch) {
 
 View.prototype.findFar = function(ch){
       var found = this.findAllFar(ch);
-      if (found.length == 0) 
+      if (found.length == 0)
             return null;
       return randomElement(found);
 };
@@ -260,7 +260,7 @@ var actionTypes = Object.create(null);
 
 LifelikeWorld.prototype.letAct = function(critter, vector){
       var action = critter.act(new View(this, vector));
-      var handled = action && action.type in actionTypes 
+      var handled = action && action.type in actionTypes
             && actionTypes[action.type].call(this, critter, vector, action);
       if(!handled){
             critter.energy -= 0.2;
@@ -388,4 +388,28 @@ Predator.prototype.act = function(view){
             return {type: "move", direction: space}
 };
 
-//Git testing
+var plan2 =
+  ["####################################################",
+   "#                 ####         ****              ###",
+   "#   *  @  ##                 ########       OO    ##",
+   "#   *    ##        O O                 ****       *#",
+   "#       ##*                        ##########     *#",
+   "#      ##***  *         ****                     **#",
+   "#* **  #  *  ***      #########                  **#",
+   "#* **  #      *               #   *              **#",
+   "#     ##              #   O   #  ***          ######",
+   "#*            @       #       #   *        O  #    #",
+   "#*                    #  ######                 ** #",
+   "###          ****          ***                  ** #",
+   "#       O                        @         O       #",
+   "#   *     ##  ##  ##  ##               ###      *  #",
+   "#   **         #              *       #####  O     #",
+   "##  **  O   O  #  #    ***  ***        ###      ** #",
+   "###               #   *****                    ****#",
+   "####################################################"];
+
+var key =
+     {"#": Wall,
+      "@": Predator,
+      "O": SmartPlantEater, 
+      "*": Plant};
